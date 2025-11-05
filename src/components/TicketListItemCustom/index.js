@@ -557,15 +557,17 @@ const TicketListItemCustom = ({ ticket }) => {
                       <AndroidIcon className={classes.chatbotIcon} />
                     </Tooltip>
                   )}
-                  <Tooltip title="Visualizar conversa">
-                    <VisibilityIcon 
-                      className={classes.eyeIcon}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        setOpenTicketMessageDialog(true);
-                      }}
-                    />
-                  </Tooltip>
+                  {profile === 'admin' && (
+                    <Tooltip title="Visualizar conversa">
+                      <VisibilityIcon 
+                        className={classes.eyeIcon}
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          setOpenTicketMessageDialog(true);
+                        }}
+                      />
+                    </Tooltip>
+                  )}
                   {getInteractionTimeLabel()}
                 </Typography>
               </Box>

@@ -294,9 +294,8 @@ const TicketsListCustom = (props) => {
 
   
   useEffect(() => {
-    const count = ticketsList.filter((ticket) => !ticket.isGroup).length;
     if (typeof updateCount === 'function') {
-      updateCount(count);
+      updateCount(ticketsList.length);
     }
   }, [ticketsList, updateCount]);
 
@@ -335,11 +334,9 @@ const TicketsListCustom = (props) => {
             </div>
           ) : (
             <>
-              {ticketsList
-                .filter((ticket) => ticket.isGroup.toString() === 'false')
-                .map((ticket) => (
-                  <TicketListItem ticket={ticket} key={ticket.id} />
-                ))}
+              {ticketsList.map((ticket) => (
+                <TicketListItem ticket={ticket} key={ticket.id} />
+              ))}
             </>
           )}
           {loading && <TicketsListSkeleton />}

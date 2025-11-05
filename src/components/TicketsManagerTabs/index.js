@@ -364,13 +364,6 @@ const TicketsManagerTabs = () => {
                 icon={<ChatIcon />}
                 classes={{ root: classes.tab }}
               />
-              {setGroupBox && (
-                <Tab
-                  value={'group'}
-                  icon={<GroupIcon />}
-                  classes={{ root: classes.tab }}
-                />
-              )}
               <Tab
                 value={'closed'}
                 icon={<DoneAllIcon />}
@@ -402,13 +395,6 @@ const TicketsManagerTabs = () => {
                 icon={<ChatIcon />}
                 classes={{ root: classes.tab }}
               />
-              {setGroupBox && (
-                <Tab
-                  value={'group'}
-                  icon={<GroupIcon />}
-                  classes={{ root: classes.tab }}
-                />
-              )}
             </Tabs>
           </Paper>
         </>
@@ -584,55 +570,7 @@ const TicketsManagerTabs = () => {
         </Paper>
       </TabPanel>
 
-      <TabPanel value={tab} name='group' className={classes.ticketsWrapper}>
-        <Tabs
-          value={tabOpen}
-          onChange={handleChangeTabOpen}
-          indicatorColor='primary'
-          textColor='primary'
-          variant='fullWidth'
-        >
-          <Tab
-            label={
-              <Badge
-                className={classes.badge}
-                badgeContent={openCount}
-                color='primary'
-              >
-                {i18n.t('ticketsList.assignedHeader')}
-              </Badge>
-            }
-            value={'open'}
-          />
-          <Tab
-            label={
-              <Badge
-                className={classes.badge}
-                badgeContent={pendingCount}
-                color='primary'
-              >
-                {i18n.t('ticketsList.pendingHeader')}
-              </Badge>
-            }
-            value={'pending'}
-          />
-        </Tabs>
-        <Paper className={classes.ticketsWrapper}>
-          <TicketsListGroup
-            status='open'
-            showAll={showAllTickets}
-            selectedQueueIds={selectedQueueIds}
-            updateCount={(val) => setOpenCount(val)}
-            style={applyPanelStyle('open')}
-          />
-          <TicketsListGroup
-            status='pending'
-            selectedQueueIds={selectedQueueIds}
-            updateCount={(val) => setPendingCount(val)}
-            style={applyPanelStyle('pending')}
-          />
-        </Paper>
-      </TabPanel>
+
 
       <TabPanel value={tab} name='closed' className={classes.ticketsWrapper}>
         <TicketsList
@@ -640,13 +578,7 @@ const TicketsManagerTabs = () => {
           showAll={true}
           selectedQueueIds={selectedQueueIds}
         />
-        {setGroupBox && (
-          <TicketsListGroup
-            status='closed'
-            showAll={true}
-            selectedQueueIds={selectedQueueIds}
-          />
-        )}
+
       </TabPanel>
       <TabPanel value={tab} name='search' className={classes.ticketsWrapper}>
         <TagsFilter onFiltered={handleSelectedTags} />
