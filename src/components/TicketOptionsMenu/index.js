@@ -6,7 +6,7 @@ import Menu from "@material-ui/core/Menu";
 import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import ConfirmationModal from "../ConfirmationModal";
-import TransferTicketModalCustom from "../TransferTicketModalCustom";
+// import TransferTicketModalCustom from "../TransferTicketModalCustom";
 import toastError from "../../errors/toastError";
 import { Can } from "../Can";
 import { AuthContext } from "../../context/Auth/AuthContext";
@@ -15,7 +15,6 @@ import ScheduleModal from "../ScheduleModal";
 
 const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 	const [confirmationOpen, setConfirmationOpen] = useState(false);
-	const [transferTicketModalOpen, setTransferTicketModalOpen] = useState(false);
 	const isMounted = useRef(true);
 	const { user } = useContext(AuthContext);
 
@@ -41,16 +40,7 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 		handleClose();
 	};
 
-	const handleOpenTransferModal = e => {
-		setTransferTicketModalOpen(true);
-		handleClose();
-	};
 
-	const handleCloseTransferTicketModal = () => {
-		if (isMounted.current) {
-			setTransferTicketModalOpen(false);
-		}
-	};
 
 	const handleOpenScheduleModal = () => {
 		handleClose();
@@ -84,9 +74,9 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 				<MenuItem onClick={handleOpenScheduleModal}>
 					{i18n.t("ticketOptionsMenu.schedule")}
 				</MenuItem>
-				<MenuItem onClick={handleOpenTransferModal}>
+				{/* <MenuItem onClick={handleOpenTransferModal}>
 					{i18n.t("ticketOptionsMenu.transfer")}
-				</MenuItem>
+				</MenuItem> */}
 				<Can
 					role={user.profile}
 					perform="ticket-options:deleteTicket"
@@ -109,11 +99,7 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 			>
 				{i18n.t("ticketOptionsMenu.confirmationModal.message")}
 			</ConfirmationModal>
-			<TransferTicketModalCustom
-				modalOpen={transferTicketModalOpen}
-				onClose={handleCloseTransferTicketModal}
-				ticketid={ticket.id}
-			/>
+
 			<ScheduleModal
 				open={scheduleModalOpen}
 				onClose={handleCloseScheduleModal}

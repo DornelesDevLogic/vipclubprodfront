@@ -32,7 +32,7 @@ import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import FaceIcon from "@material-ui/icons/Face";
 import { getInitials } from "../../helpers/getInitials";
 import { generateColor } from "../../helpers/colorGenerator";
-import TransferTicketModal from "../TransferTicketModalCustom";
+// import TransferTicketModal from "../TransferTicketModalCustom";
 
 const useStyles = makeStyles((theme) => ({
   ticket: {
@@ -472,13 +472,13 @@ const TicketListItemCustom = ({ ticket }) => {
       default:
         return (
           <>
-            <Tooltip title="Transferir">
+            {/* <Tooltip title="Transferir">
               <TransferWithinAStationIcon
                 className={classes.actionIcon}
                 style={{ color: blue[500] }}
                 onClick={handleTransferTicket}
               />
-            </Tooltip>
+            </Tooltip> */}
             <Tooltip title="Fechar">
               <CloseIcon
                 className={classes.actionIcon}
@@ -493,11 +493,11 @@ const TicketListItemCustom = ({ ticket }) => {
 
   return (
     <>
-      <TransferTicketModal
+      {/* <TransferTicketModal
         modalOpen={transferTicketModalOpen}
         onClose={handleCloseTransferModal}
         ticketid={ticket.id}
-      />
+      /> */}
 
       <TicketMessagesDialog
         open={openTicketMessageDialog}

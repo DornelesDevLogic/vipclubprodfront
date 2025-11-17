@@ -769,7 +769,7 @@ const MainListItems = (props) => {
                 <div className={classes.versionContainer}>
                   {`v${version}`}
                   <span className={classes.versionBadge}>
-                    latest
+                    latest RD
                   </span>
                 </div>
               </React.Fragment>
