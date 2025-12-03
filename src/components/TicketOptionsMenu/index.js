@@ -6,7 +6,7 @@ import Menu from "@material-ui/core/Menu";
 import { i18n } from "../../translate/i18n";
 import api from "../../services/api";
 import ConfirmationModal from "../ConfirmationModal";
-// import TransferTicketModalCustom from "../TransferTicketModalCustom";
+import TransferTicketModalCustom from "../TransferTicketModalCustom";
 import toastError from "../../errors/toastError";
 import { Can } from "../Can";
 import { AuthContext } from "../../context/Auth/AuthContext";
@@ -20,6 +20,7 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 
 	const [scheduleModalOpen, setScheduleModalOpen] = useState(false);
 	const [contactId, setContactId] = useState(null);
+	const [transferTicketModalOpen, setTransferTicketModalOpen] = useState(false);
 
 	useEffect(() => {
 		return () => {
@@ -53,6 +54,15 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 		setContactId(null);
 	}
 
+	const handleOpenTransferModal = () => {
+		handleClose();
+		setTransferTicketModalOpen(true);
+	}
+
+	const handleCloseTransferModal = () => {
+		setTransferTicketModalOpen(false);
+	}
+
 	return (
 		<>
 			<Menu
@@ -74,9 +84,11 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 				<MenuItem onClick={handleOpenScheduleModal}>
 					{i18n.t("ticketOptionsMenu.schedule")}
 				</MenuItem>
-				{/* <MenuItem onClick={handleOpenTransferModal}>
-					{i18n.t("ticketOptionsMenu.transfer")}
-				</MenuItem> */}
+				{user.profile === 'admin' && (
+					<MenuItem onClick={handleOpenTransferModal}>
+						{i18n.t("ticketOptionsMenu.transfer")}
+					</MenuItem>
+				)}
 				<Can
 					role={user.profile}
 					perform="ticket-options:deleteTicket"
@@ -105,6 +117,12 @@ const TicketOptionsMenu = ({ ticket, menuOpen, handleClose, anchorEl }) => {
 				onClose={handleCloseScheduleModal}
 				aria-labelledby="form-dialog-title"
 				contactId={contactId}
+			/>
+
+			<TransferTicketModalCustom
+				modalOpen={transferTicketModalOpen}
+				onClose={handleCloseTransferModal}
+				ticketid={ticket.id}
 			/>
 		</>
 	);

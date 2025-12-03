@@ -11,7 +11,7 @@ import ListItemAvatar from "@material-ui/core/ListItemAvatar";
 import ListItemSecondaryAction from "@material-ui/core/ListItemSecondaryAction";
 import ListItemText from "@material-ui/core/ListItemText";
 import Typography from "@material-ui/core/Typography";
-import { blue, green, grey, orange, red } from "@material-ui/core/colors";
+import { blue, green, grey, orange, red, yellow } from "@material-ui/core/colors";
 import { makeStyles } from "@material-ui/core/styles";
 import { Tooltip } from "@material-ui/core";
 import { v4 as uuidv4 } from "uuid";
@@ -32,7 +32,7 @@ import WhatsAppIcon from "@material-ui/icons/WhatsApp";
 import FaceIcon from "@material-ui/icons/Face";
 import { getInitials } from "../../helpers/getInitials";
 import { generateColor } from "../../helpers/colorGenerator";
-// import TransferTicketModal from "../TransferTicketModalCustom";
+import TransferTicketModal from "../TransferTicketModalCustom";
 
 const useStyles = makeStyles((theme) => ({
   ticket: {
@@ -203,6 +203,10 @@ const useStyles = makeStyles((theme) => ({
   queueBadge: {
     backgroundColor: grey[100],
     color: grey[600],
+  },
+  revendasBadge: {
+    backgroundColor: yellow[100],
+    color: yellow[800],
   },
   presenceIndicator: {
     color: green[500],
@@ -472,13 +476,15 @@ const TicketListItemCustom = ({ ticket }) => {
       default:
         return (
           <>
-            {/* <Tooltip title="Transferir">
-              <TransferWithinAStationIcon
-                className={classes.actionIcon}
-                style={{ color: blue[500] }}
-                onClick={handleTransferTicket}
-              />
-            </Tooltip> */}
+            {profile === 'admin' && (
+              <Tooltip title="Transferir">
+                <TransferWithinAStationIcon
+                  className={classes.actionIcon}
+                  style={{ color: blue[500] }}
+                  onClick={handleTransferTicket}
+                />
+              </Tooltip>
+            )}
             <Tooltip title="Fechar">
               <CloseIcon
                 className={classes.actionIcon}
@@ -493,11 +499,11 @@ const TicketListItemCustom = ({ ticket }) => {
 
   return (
     <>
-      {/* <TransferTicketModal
+      <TransferTicketModal
         modalOpen={transferTicketModalOpen}
         onClose={handleCloseTransferModal}
         ticketid={ticket.id}
-      /> */}
+      />
 
       <TicketMessagesDialog
         open={openTicketMessageDialog}
@@ -589,7 +595,7 @@ const TicketListItemCustom = ({ ticket }) => {
                 <Box className={classes.infoContainer}>
                   {ticket.whatsapp?.name && (
                     <Tooltip title={`Conexão: ${ticket.whatsapp.name}`}>
-                      <span className={clsx(classes.tagBadge, classes.connectionBadge)}>
+                      <span className={clsx(classes.tagBadge, ticket.whatsapp.name === 'Revendas-3312' ? classes.revendasBadge : classes.connectionBadge)}>
                         <AndroidIcon className={classes.tagBadgeIcon} />
                         <span className={classes.tagBadgeText}>{ticket.whatsapp.name}</span>
                       </span>
