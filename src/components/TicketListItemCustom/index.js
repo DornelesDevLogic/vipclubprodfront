@@ -33,6 +33,12 @@ import FaceIcon from "@material-ui/icons/Face";
 import { getInitials } from "../../helpers/getInitials";
 import { generateColor } from "../../helpers/colorGenerator";
 import TransferTicketModal from "../TransferTicketModalCustom";
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 const useStyles = makeStyles((theme) => ({
   ticket: {
@@ -298,6 +304,9 @@ const TicketListItemCustom = ({ ticket }) => {
   const { user } = useContext(AuthContext);
   const { profile } = user;
   const [transferTicketModalOpen, setTransferTicketModalOpen] = useState(false);
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [rejectReason, setRejectReason] = useState("");
+  const [rejectError, setRejectError] = useState("");
   const presenceMessage = { 
     composing: "Digitando...", 
     recording: "Gravando áudio...",
@@ -371,6 +380,38 @@ const TicketListItemCustom = ({ ticket }) => {
         userId: user?.id,
         queueId: ticket?.queue?.id,
       });
+      history.push("/tickets/");
+    } catch (err) {
+      toastError(err);
+    } finally {
+      if (isMounted.current) setLoading(false);
+    }
+  };
+
+  const handleOpenRejectModal = () => {
+    setRejectModalOpen(true);
+    setRejectReason("");
+    setRejectError("");
+  };
+
+  const handleCloseRejectModal = () => {
+    setRejectModalOpen(false);
+    setRejectReason("");
+    setRejectError("");
+  };
+
+  const handleConfirmReject = async () => {
+    if (rejectReason.trim().length < 10) {
+      setRejectError("O motivo deve ter no mínimo 10 caracteres");
+      return;
+    }
+    setLoading(true);
+    try {
+      await api.put(`/tickets/${ticket.id}`, {
+        status: "pending",
+        userId: null,
+      });
+      handleCloseRejectModal();
       history.push("/tickets/");
     } catch (err) {
       toastError(err);
@@ -458,7 +499,7 @@ const TicketListItemCustom = ({ ticket }) => {
               <CloseIcon
                 className={classes.actionIcon}
                 style={{ color: red[500] }}
-                onClick={() => handleCloseTicket(ticket.id)}
+                onClick={handleOpenRejectModal}
               />
             </Tooltip>
           </>
@@ -510,6 +551,50 @@ const TicketListItemCustom = ({ ticket }) => {
         handleClose={() => setOpenTicketMessageDialog(false)}
         ticketId={ticket.id}
       />
+
+      <Dialog open={rejectModalOpen} onClose={handleCloseRejectModal} maxWidth="sm" fullWidth>
+        <DialogTitle style={{ background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)", color: "white" }}>
+          Motivo da Recusa
+        </DialogTitle>
+        <DialogContent style={{ marginTop: "20px" }}>
+          <TextField
+            autoFocus
+            margin="dense"
+            label="Por que você está recusando este chamado?"
+            type="text"
+            fullWidth
+            multiline
+            rows={4}
+            variant="outlined"
+            value={rejectReason}
+            onChange={(e) => {
+              setRejectReason(e.target.value);
+              if (e.target.value.trim().length >= 10) {
+                setRejectError("");
+              }
+            }}
+            error={!!rejectError}
+            helperText={rejectError || `${rejectReason.trim().length}/10 caracteres mínimos`}
+            placeholder="Digite o motivo da recusa (mínimo 10 caracteres)..."
+          />
+        </DialogContent>
+        <DialogActions style={{ padding: "16px 24px" }}>
+          <Button onClick={handleCloseRejectModal} style={{ color: "#64748b" }}>
+            Cancelar
+          </Button>
+          <Button 
+            onClick={handleConfirmReject} 
+            style={{ 
+              background: "linear-gradient(135deg, #ef4444 0%, #dc2626 100%)",
+              color: "white",
+              fontWeight: 600
+            }}
+            disabled={rejectReason.trim().length < 10}
+          >
+            Confirmar Recusa
+          </Button>
+        </DialogActions>
+      </Dialog>
       
       <ListItem
         button

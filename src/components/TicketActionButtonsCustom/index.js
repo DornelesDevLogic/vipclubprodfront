@@ -16,6 +16,12 @@ import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import UndoRoundedIcon from '@material-ui/icons/UndoRounded';
 import Tooltip from '@material-ui/core/Tooltip';
 import { green } from '@material-ui/core/colors';
+import Dialog from "@material-ui/core/Dialog";
+import DialogTitle from "@material-ui/core/DialogTitle";
+import DialogContent from "@material-ui/core/DialogContent";
+import DialogActions from "@material-ui/core/DialogActions";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 
 const useStyles = makeStyles(theme => ({
@@ -36,6 +42,9 @@ const TicketActionButtonsCustom = ({ ticket, onSearchToggle }) => {
 	const [anchorEl, setAnchorEl] = useState(null);
 	const [loading, setLoading] = useState(false);
 	const ticketOptionsMenuOpen = Boolean(anchorEl);
+	const [returnModalOpen, setReturnModalOpen] = useState(false);
+	const [returnReason, setReturnReason] = useState("");
+	const [returnError, setReturnError] = useState("");
 	const { user } = useContext(AuthContext);
 	const { setCurrentTicket } = useContext(TicketsContext);
 
@@ -77,8 +86,74 @@ const TicketActionButtonsCustom = ({ ticket, onSearchToggle }) => {
 		}
 	};
 
+	const handleOpenReturnModal = () => {
+		setReturnModalOpen(true);
+		setReturnReason("");
+		setReturnError("");
+	};
+
+	const handleCloseReturnModal = () => {
+		setReturnModalOpen(false);
+		setReturnReason("");
+		setReturnError("");
+	};
+
+	const handleConfirmReturn = async () => {
+		if (returnReason.trim().length < 10) {
+			setReturnError("O motivo deve ter no mínimo 10 caracteres");
+			return;
+		}
+		handleCloseReturnModal();
+		await handleUpdateTicketStatus(null, "pending", null);
+	};
+
 	return (
-		<div className={classes.actionButtons}>
+		<>
+			<Dialog open={returnModalOpen} onClose={handleCloseReturnModal} maxWidth="sm" fullWidth>
+				<DialogTitle style={{ background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)", color: "white" }}>
+					Motivo do Retorno
+				</DialogTitle>
+				<DialogContent style={{ marginTop: "20px" }}>
+					<TextField
+						autoFocus
+						margin="dense"
+						label="Por que você está retornando este chamado?"
+						type="text"
+						fullWidth
+						multiline
+						rows={4}
+						variant="outlined"
+						value={returnReason}
+						onChange={(e) => {
+							setReturnReason(e.target.value);
+							if (e.target.value.trim().length >= 10) {
+								setReturnError("");
+							}
+						}}
+						error={!!returnError}
+						helperText={returnError || `${returnReason.trim().length}/10 caracteres mínimos`}
+						placeholder="Digite o motivo do retorno (mínimo 10 caracteres)..."
+					/>
+				</DialogContent>
+				<DialogActions style={{ padding: "16px 24px" }}>
+					<Button onClick={handleCloseReturnModal} style={{ color: "#64748b" }}>
+						Cancelar
+					</Button>
+					<Button 
+						onClick={handleConfirmReturn} 
+						style={{ 
+							background: "linear-gradient(135deg, #f59e0b 0%, #d97706 100%)",
+							color: "white",
+							fontWeight: 600
+						}}
+						disabled={returnReason.trim().length < 10}
+					>
+						Confirmar Retorno
+					</Button>
+				</DialogActions>
+			</Dialog>
+
+			<div className={classes.actionButtons}>
 			{ticket.status === "closed" && (
 				<ButtonWithSpinner
 					loading={loading}
@@ -97,7 +172,7 @@ const TicketActionButtonsCustom = ({ ticket, onSearchToggle }) => {
 						</IconButton>
 					</Tooltip>
 					<Tooltip title={i18n.t("messagesList.header.buttons.return")}>
-						<IconButton onClick={e => handleUpdateTicketStatus(e, "pending", null)}>
+						<IconButton onClick={handleOpenReturnModal}>
 							<UndoRoundedIcon />
 						</IconButton>
 					</Tooltip>
@@ -147,7 +222,8 @@ const TicketActionButtonsCustom = ({ ticket, onSearchToggle }) => {
 					{i18n.t("messagesList.header.buttons.accept")}
 				</ButtonWithSpinner>
 			)}
-		</div>
+			</div>
+		</>
 	);
 };
 
