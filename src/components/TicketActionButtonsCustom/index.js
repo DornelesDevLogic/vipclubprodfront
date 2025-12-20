@@ -15,7 +15,8 @@ import { TicketsContext } from "../../context/Tickets/TicketsContext";
 import CheckCircleIcon from '@material-ui/icons/CheckCircle';
 import UndoRoundedIcon from '@material-ui/icons/UndoRounded';
 import Tooltip from '@material-ui/core/Tooltip';
-import { green } from '@material-ui/core/colors';
+import { green, red } from '@material-ui/core/colors';
+import CancelIcon from '@material-ui/icons/Cancel';
 import Dialog from "@material-ui/core/Dialog";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DialogContent from "@material-ui/core/DialogContent";
@@ -107,6 +108,26 @@ const TicketActionButtonsCustom = ({ ticket, onSearchToggle }) => {
 		await handleUpdateTicketStatus(null, "pending", null);
 	};
 
+	const handleEncerrarTicket = async () => {
+		setLoading(true);
+		try {
+			await api.put(`/tickets2/${ticket.id}`, {
+				status: "closed",
+				userId: user?.id,
+				useIntegration: false,
+				promptId: false,
+				integrationId: false
+			});
+
+			setLoading(false);
+			setCurrentTicket({ id: null, code: null });
+			history.push("/tickets");
+		} catch (err) {
+			setLoading(false);
+			toastError(err);
+		}
+	};
+
 	return (
 		<>
 			<Dialog open={returnModalOpen} onClose={handleCloseReturnModal} maxWidth="sm" fullWidth>
@@ -183,6 +204,13 @@ const TicketActionButtonsCustom = ({ ticket, onSearchToggle }) => {
 							</IconButton>
 						</Tooltip>
 					</ThemeProvider>
+					{user.profile === 'admin' && (
+						<Tooltip title="Encerrar">
+							<IconButton onClick={handleEncerrarTicket} style={{ color: red[500] }}>
+								<CancelIcon />
+							</IconButton>
+						</Tooltip>
+					)}
 					{/* <ButtonWithSpinner
 						loading={loading}
 						startIcon={<Replay />}
