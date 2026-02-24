@@ -389,7 +389,7 @@ const LoggedInLayout = ({ children }) => {
               </>
             ) : (
               <>
-                Olá  <b>{user.name}</b>, Bem vindo a <b>{user?.company?.name}</b>!
+                Olá  <b>{user.name}</b>, Problema resolvido é cliente conquistado. 
               </>
             )}
           </Typography>

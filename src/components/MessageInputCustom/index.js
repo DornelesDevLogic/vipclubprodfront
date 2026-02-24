@@ -299,8 +299,8 @@ const EmojiOptions = (props) => {
 };
 
 const SignSwitch = (props) => {
-  const { width, setSignMessage, signMessage } = props;
-  if (isWidthUp("md", width)) {
+  const { width, setSignMessage, signMessage, user } = props;
+  if (isWidthUp("md", width) && user?.profile === 'admin') {
     return (
       <FormControlLabel
         style={{ marginRight: 7, color: "gray" }}
@@ -1271,6 +1271,7 @@ const MessageInputCustom = (props) => {
               width={props.width}
               setSignMessage={setSignMessage}
               signMessage={signMessage}
+              user={user}
             />
 
             <CustomInput
