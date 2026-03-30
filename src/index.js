@@ -9,10 +9,7 @@ ReactDOM.render(
 	<CssBaseline>
 		<App />
 	</CssBaseline>,
-	document.getElementById("root"),
-	() => {
-		window.finishProgress();
-	}
+	document.getElementById("root")
 );
 
 // Registrar o service worker
