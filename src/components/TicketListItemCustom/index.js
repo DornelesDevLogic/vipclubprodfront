@@ -44,12 +44,16 @@ const useStyles = makeStyles((theme) => ({
   ticket: {
     position: "relative",
     margin: "8px 0",
-    borderRadius: "8px",
-    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
-    transition: "all 0.3s ease",
+    borderRadius: "16px",
+    backdropFilter: "blur(20px)",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    boxShadow: "0 8px 32px rgba(0, 0, 0, 0.1)",
+    transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
     "&:hover": {
-      boxShadow: "0 4px 8px rgba(0,0,0,0.15)",
-      transform: "translateY(-2px)",
+      boxShadow: "0 16px 64px rgba(0, 0, 0, 0.15)",
+      transform: "translateY(-4px)",
+      backgroundColor: "rgba(255, 255, 255, 0.15)",
     },
   },
   pendingTicket: {
@@ -57,7 +61,9 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: theme.palette.ticketlist.main,
   },
   selectedTicket: {
-    backgroundColor: "#e3f2fd",
+    backgroundColor: "rgba(33, 150, 243, 0.1)",
+    border: "1px solid rgba(33, 150, 243, 0.3)",
+    boxShadow: "0 8px 32px rgba(33, 150, 243, 0.2)",
   },
   ticketQueueColor: {
     width: "6px",
@@ -65,8 +71,8 @@ const useStyles = makeStyles((theme) => ({
     position: "absolute",
     top: 0,
     left: 0,
-    borderTopLeftRadius: "8px",
-    borderBottomLeftRadius: "8px",
+    borderTopLeftRadius: "16px",
+    borderBottomLeftRadius: "16px",
   },
   eyeIcon: {
     fontSize: "16px",
@@ -80,12 +86,17 @@ const useStyles = makeStyles((theme) => ({
     height: "60px",
     marginRight: "12px",
     position: "relative",
+    borderRadius: "12px",
+    boxShadow: "0 4px 12px rgba(0, 0, 0, 0.1)",
   },
   avatarBadge: {
     position: "absolute",
     top: 0,
     left: 0,
     transform: "translate(-30%, -30%)",
+    borderRadius: "50%",
+    border: "2px solid white",
+    zIndex: 1000,
   },
   headerContainer: {
     display: 'flex',
@@ -95,13 +106,15 @@ const useStyles = makeStyles((theme) => ({
   timeLabel: {
     fontSize: "0.75rem",
     color: theme.palette.common.white,
-    backgroundColor: theme.palette.common.black,
-    padding: "2px 8px",
+    backgroundColor: "rgba(0, 0, 0, 0.7)",
+    backdropFilter: "blur(10px)",
+    padding: "4px 8px",
     borderRadius: "12px",
     marginRight: "8px",
     fontWeight: 500,
     minWidth: "40px",
     textAlign: "center",
+    border: "1px solid rgba(255, 255, 255, 0.1)",
   },
   nameContainer: {
     display: 'flex',
@@ -131,10 +144,17 @@ const useStyles = makeStyles((theme) => ({
   },
   unreadBadge: {
     "& .MuiBadge-badge": {
-      backgroundColor: green[500],
+      backgroundColor: "rgba(33, 150, 243, 0.9)",
       color: "white",
+      fontWeight: "bold",
+      fontSize: "11px",
+      borderRadius: "10px",
+      padding: "2px 6px",
+      boxShadow: "0 2px 8px rgba(33, 150, 243, 0.4)",
+      zIndex: 1000,
     },
-  },  tagContainer: {
+  },
+  tagContainer: {
     display: "flex",
     alignItems: "center",
     flexWrap: "wrap",
@@ -164,68 +184,128 @@ const useStyles = makeStyles((theme) => ({
   },
   tagIcon: {
     fontSize: "14px",
-  },  tagBadge: {
+  },
+
+ tagBadge: {
+  display: "inline-flex",
+  alignItems: "center",
+  borderRadius: "20px",
+  padding: "4px 12px",
+  fontSize: "0.8rem",
+  fontWeight: "600",
+  height: "28px",
+  cursor: "pointer", // Importante para indicar interatividade
+  
+  // Estado Inicial
+  backgroundColor: "rgba(255, 255, 255, 0.95)",
+  backdropFilter: "blur(20px) saturate(180%)",
+  border: "1px solid #FFFFFF",
+  boxShadow: "0 2px 5px rgba(0, 0, 0, 0.05)",
+  color: "#1d1d1f",
+  
+  // A mágica acontece aqui:
+  // Usamos cubic-bezier para uma movimentação mais "elástica" e natural
+  transition: "all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275)",
+  transform: "scale(1) translateY(0)",
+
+  "&:hover": {
+    backgroundColor: "#FFFFFF",
+    
+    // Zoom sutil (4%) + Elevação (2px para cima)
+    transform: "scale(1.04) translateY(-2px)", 
+    
+    // Sombra maior e mais suave para simular distância do fundo
+    boxShadow: "0 10px 20px rgba(0, 0, 0, 0.12)",
+    
+    // Um brilho extra na borda no hover
+    borderColor: "rgba(255, 255, 255, 1)",
+  },
+
+  // Efeito de "click" (opcional, mas muito Apple)
+  "&:active": {
+    transform: "scale(0.96) translateY(0)",
+    boxShadow: "0 2px 5px rgba(0, 0, 0, 0.1)",
+    transition: "all 0.1s ease",
+  }
+},
+
+  tagBadgeIcon: {
+    fontSize: "14px",
+    marginRight: "6px",
     display: "flex",
     alignItems: "center",
-    borderRadius: "12px",
-    padding: "2px 8px",
-    fontSize: "0.75rem",
-    fontWeight: "500",
-    height: "22px",
-    maxWidth: "130px",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
-  },
-  tagBadgeIcon: {
-    fontSize: "12px",
-    marginRight: "4px",
   },
   tagBadgeText: {
-    fontSize: "0.7rem",
-    overflow: "hidden",
-    textOverflow: "ellipsis",
-    whiteSpace: "nowrap",
+    fontSize: "0.75rem",
+    fontWeight: "600",
+    letterSpacing: "-0.01em",
   },
   customTagBadge: {
     border: "1px solid",
-    borderRadius: "4px",
-    padding: "2px 6px",
+    borderRadius: "6px",
+    padding: "4px 8px",
     position: "relative",
   },
   tagIndicator: {
     fontWeight: "bold",
-    fontSize: "0.8rem",
-    marginRight: "4px",
+    fontSize: "0.85rem",
+    marginRight: "6px",
   },
   connectionBadge: {
-    backgroundColor: green[100],
-    color: green[600],
+    backgroundColor: "rgba(232, 245, 233, 0.8)", // Verde ultra claro
+    color: "#1b5e20", // Texto verde escuro para contraste
+    border: "1px solid rgba(76, 175, 80, 0.3)",
   },
   agentBadge: {
-    backgroundColor: blue[100],
-    color: blue[600],
+    backgroundColor: "rgba(227, 242, 253, 0.8)", // Azul ultra claro
+    color: "#0d47a1",
+    border: "1px solid rgba(33, 150, 243, 0.3)",
   },
   queueBadge: {
-    backgroundColor: grey[100],
-    color: grey[600],
+    backgroundColor: "rgba(245, 245, 247, 0.8)", // Cinza Apple
+    color: "#424242",
+    border: "1px solid rgba(158, 158, 158, 0.3)",
   },
   revendasBadge: {
-    backgroundColor: yellow[100],
-    color: yellow[800],
+    backgroundColor: "rgba(255, 248, 225, 0.8)", // Amarelo/Ouro ultra claro
+    color: "#b7950b",
+    border: "1px solid rgba(255, 193, 7, 0.4)",
   },
+
+  
   presenceIndicator: {
-    color: green[500],
+    color: "#34c759", // Verde oficial iOS
     fontWeight: "bold",
     fontSize: "0.8rem",
   },
   interactionTime: {
-    fontSize: "0.75rem",
-    marginLeft: "4px",
-    "&.recent": { color: green[500] },
-    "&.warning": { color: orange[500] },
-    "&.critical": { color: red[500] },
+    fontSize: "0.72rem",
+    fontWeight: "600",
+    padding: "2px 6px",
+    borderRadius: "4px",
+    marginLeft: "6px",
+    backgroundColor: "rgba(0, 0, 0, 0.03)", // Fundo sutil para o tempo
+    
+    "&.recent": { color: "#34c759" },
+    "&.warning": { color: "#ff9500" }, // Laranja Apple
+    "&.critical": { color: "#ff3b30" }, // Vermelho Apple
   },
+
+  customTagBadge: {
+    border: "1px solid rgba(0,0,0,0.1)",
+    borderRadius: "8px",
+    padding: "4px 10px",
+    position: "relative",
+    display: "flex",
+    alignItems: "center",
+  },
+
+  tagIndicator: {
+    fontWeight: "700",
+    fontSize: "0.85rem",
+    marginRight: "6px",
+  },
+
   actionIcon: {
     fontSize: "22px",
     cursor: "pointer",
@@ -233,7 +313,8 @@ const useStyles = makeStyles((theme) => ({
     "&:hover": {
       opacity: 0.8,
     },
-  },  chatbotIcon: {
+  },
+  chatbotIcon: {
     fontSize: "16px",
     marginLeft: "4px",
     color: grey[600],
@@ -254,12 +335,14 @@ const useStyles = makeStyles((theme) => ({
   tagContainer: {
     display: "flex",
     alignItems: "center",
-    backgroundColor: grey[100],
-    borderRadius: "6px",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backdropFilter: "blur(10px)",
+    borderRadius: "12px",
     padding: "4px 8px",
     marginTop: "4px",
     width: "100%",
     gap: "6px",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
   },
   tagLabel: {
     fontSize: "0.75rem",

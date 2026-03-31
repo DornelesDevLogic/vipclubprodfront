@@ -21,6 +21,10 @@ const useStyles = makeStyles((theme) => ({
     overflow: "hidden",
     borderTopRightRadius: 0,
     borderBottomRightRadius: 0,
+    backdropFilter: "blur(20px)",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    borderRadius: "16px",
   },
 
   ticketsList: {
@@ -28,17 +32,20 @@ const useStyles = makeStyles((theme) => ({
     maxHeight: "100%",
     overflowY: "scroll",
     ...theme.scrollbarStyles,
-    borderTop: "2px solid rgba(0, 0, 0, 0.12)",
+    borderTop: "2px solid rgba(255, 255, 255, 0.2)",
   },
 
   ticketsListHeader: {
     color: "rgb(67, 83, 105)",
     zIndex: 2,
-    backgroundColor: "white",
-    borderBottom: "1px solid rgba(0, 0, 0, 0.12)",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    backdropFilter: "blur(10px)",
+    borderBottom: "1px solid rgba(255, 255, 255, 0.2)",
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    padding: "8px 16px",
+    borderRadius: "16px 16px 0 0",
   },
 
   ticketsCount: {
@@ -69,6 +76,11 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "column",
     alignItems: "center",
     justifyContent: "center",
+    backdropFilter: "blur(10px)",
+    backgroundColor: "rgba(255, 255, 255, 0.1)",
+    border: "1px solid rgba(255, 255, 255, 0.2)",
+    borderRadius: "16px",
+    padding: "20px",
   },
 }));
 
