@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useReducer, useContext } from "react";
+import React, { useState, useEffect, useMemo, useReducer, useContext } from "react";
 
 import { makeStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
@@ -311,6 +311,38 @@ const TicketsListCustom = (props) => {
     }
   }, [ticketsList, updateCount]);
 
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const WAITING_THRESHOLD_MS = 30 * 60 * 1000;
+
+  const sortedTicketsList = useMemo(() => {
+    if (status !== "pending") return ticketsList;
+
+    const urgent = [];
+    const normal = [];
+
+    ticketsList.forEach((ticket) => {
+      const waitingMs = ticket.updatedAt
+        ? now - new Date(ticket.updatedAt).getTime()
+        : 0;
+      if (waitingMs >= WAITING_THRESHOLD_MS) {
+        urgent.push(ticket);
+      } else {
+        normal.push(ticket);
+      }
+    });
+
+    // Mais antigo aguardando primeiro, para não deixar ninguém pra trás
+    urgent.sort((a, b) => new Date(a.updatedAt) - new Date(b.updatedAt));
+
+    return [...urgent, ...normal];
+  }, [ticketsList, status, now]);
+
   const loadMore = () => {
     setPageNumber((prevState) => prevState + 1);
   };
@@ -346,7 +378,7 @@ const TicketsListCustom = (props) => {
             </div>
           ) : (
             <>
-              {ticketsList.map((ticket) => (
+              {sortedTicketsList.map((ticket) => (
                 <TicketListItem ticket={ticket} key={ticket.id} />
               ))}
             </>

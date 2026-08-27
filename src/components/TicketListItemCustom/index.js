@@ -60,6 +60,30 @@ const useStyles = makeStyles((theme) => ({
     cursor: "unset",
     backgroundColor: theme.palette.ticketlist.main,
   },
+  "@keyframes urgentBlink": {
+    "0%, 100%": {
+      backgroundColor: "rgba(244, 67, 54, 0.22)",
+      borderColor: "rgba(244, 67, 54, 0.6)",
+    },
+    "50%": {
+      backgroundColor: "rgba(244, 67, 54, 0.55)",
+      borderColor: "rgba(244, 67, 54, 1)",
+    },
+  },
+  urgentWaiting: {
+    animation: "$urgentBlink 1s ease-in-out infinite",
+    border: "2px solid rgba(244, 67, 54, 0.8)",
+  },
+  urgentBadge: {
+    marginLeft: "6px",
+    fontSize: "0.65rem",
+    fontWeight: 700,
+    color: "#fff",
+    backgroundColor: red[600],
+    borderRadius: "8px",
+    padding: "2px 6px",
+    letterSpacing: "0.03em",
+  },
   selectedTicket: {
     backgroundColor: "rgba(33, 150, 243, 0.1)",
     border: "1px solid rgba(33, 150, 243, 0.3)",
@@ -398,6 +422,18 @@ const TicketListItemCustom = ({ ticket }) => {
     unavailable: "Offline"
   };
 
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Date.now()), 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const isUrgentWaiting =
+    ticket.status === "pending" &&
+    !!ticket.updatedAt &&
+    now - parseISO(ticket.updatedAt).getTime() >= 30 * 60 * 1000;
+
   const truncateText = (text, maxLength) => {
     if (!text) return "";
     if (text.length <= maxLength) return text;
@@ -686,6 +722,7 @@ const TicketListItemCustom = ({ ticket }) => {
         className={clsx(classes.ticket, {
           [classes.pendingTicket]: ticket.status === "pending",
           [classes.selectedTicket]: ticketId && +ticketId === ticket.id,
+          [classes.urgentWaiting]: isUrgentWaiting,
         })}
       >
         <span
@@ -743,6 +780,11 @@ const TicketListItemCustom = ({ ticket }) => {
                     </Tooltip>
                   )}
                   {getInteractionTimeLabel()}
+                  {isUrgentWaiting && (
+                    <Tooltip title="Aguardando há mais de 30 minutos">
+                      <span className={classes.urgentBadge}>URGENTE</span>
+                    </Tooltip>
+                  )}
                 </Typography>
               </Box>
             </Box>
