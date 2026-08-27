@@ -303,16 +303,24 @@ const useStyles = makeStyles((theme) => ({
     fontSize: "0.8rem",
   },
   interactionTime: {
-    fontSize: "0.72rem",
-    fontWeight: "600",
-    padding: "2px 6px",
+    fontSize: "0.78rem",
+    fontWeight: "700",
+    padding: "3px 7px",
     borderRadius: "4px",
     marginLeft: "6px",
     backgroundColor: "rgba(0, 0, 0, 0.03)", // Fundo sutil para o tempo
-    
+
     "&.recent": { color: "#34c759" },
     "&.warning": { color: "#ff9500" }, // Laranja Apple
     "&.critical": { color: "#ff3b30" }, // Vermelho Apple
+  },
+  interactionTimeUrgent: {
+    fontSize: "0.95rem",
+    fontWeight: "800",
+    color: "#7f0000",
+    backgroundColor: "#ffffff",
+    border: "1px solid rgba(127, 0, 0, 0.3)",
+    boxShadow: "0 1px 3px rgba(0, 0, 0, 0.35)",
   },
 
   customTagBadge: {
@@ -485,7 +493,11 @@ const TicketListItemCustom = ({ ticket }) => {
     }
 
     return (
-      <span className={`${classes.interactionTime} ${className}`}>
+      <span
+        className={clsx(classes.interactionTime, className, {
+          [classes.interactionTimeUrgent]: isUrgentWaiting,
+        })}
+      >
         {labelText}
       </span>
     );
