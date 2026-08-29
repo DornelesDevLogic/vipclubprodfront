@@ -60,27 +60,9 @@ const useStyles = makeStyles((theme) => ({
     cursor: "unset",
     backgroundColor: theme.palette.ticketlist.main,
   },
-  "@keyframes urgentPulse": {
-    "0%, 100%": { opacity: 0 },
-    "50%": { opacity: 1 },
-  },
   urgentWaiting: {
     border: "2px solid rgba(244, 67, 54, 0.85)",
-    backgroundColor: "rgba(244, 67, 54, 0.3)",
-    overflow: "hidden",
-    "&::after": {
-      content: '""',
-      position: "absolute",
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0,
-      borderRadius: "inherit",
-      backgroundColor: "rgba(244, 67, 54, 0.35)",
-      pointerEvents: "none",
-      willChange: "opacity",
-      animation: "$urgentPulse 1.4s ease-in-out infinite",
-    },
+    backgroundColor: "rgba(244, 67, 54, 0.35)",
   },
   urgentBadge: {
     marginLeft: "6px",
