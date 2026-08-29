@@ -60,19 +60,27 @@ const useStyles = makeStyles((theme) => ({
     cursor: "unset",
     backgroundColor: theme.palette.ticketlist.main,
   },
-  "@keyframes urgentBlink": {
-    "0%, 100%": {
-      backgroundColor: "rgba(244, 67, 54, 0.22)",
-      borderColor: "rgba(244, 67, 54, 0.6)",
-    },
-    "50%": {
-      backgroundColor: "rgba(244, 67, 54, 0.55)",
-      borderColor: "rgba(244, 67, 54, 1)",
-    },
+  "@keyframes urgentPulse": {
+    "0%, 100%": { opacity: 0 },
+    "50%": { opacity: 1 },
   },
   urgentWaiting: {
-    animation: "$urgentBlink 1s ease-in-out infinite",
-    border: "2px solid rgba(244, 67, 54, 0.8)",
+    border: "2px solid rgba(244, 67, 54, 0.85)",
+    backgroundColor: "rgba(244, 67, 54, 0.3)",
+    overflow: "hidden",
+    "&::after": {
+      content: '""',
+      position: "absolute",
+      top: 0,
+      left: 0,
+      right: 0,
+      bottom: 0,
+      borderRadius: "inherit",
+      backgroundColor: "rgba(244, 67, 54, 0.35)",
+      pointerEvents: "none",
+      willChange: "opacity",
+      animation: "$urgentPulse 1.4s ease-in-out infinite",
+    },
   },
   urgentBadge: {
     marginLeft: "6px",
@@ -481,9 +489,9 @@ const TicketListItemCustom = ({ ticket }) => {
     let labelText = "";
     let className = "";
     
-    if (minutesDifference < 30) {
+    if (minutesDifference < 60) {
       labelText = `${minutesDifference}m`;
-      className = "recent";
+      className = minutesDifference < 30 ? "recent" : "warning";
     } else if (hoursDifference < 24) {
       labelText = `${hoursDifference}h`;
       className = hoursDifference > 1 ? "warning" : "recent";
