@@ -64,6 +64,9 @@ const useStyles = makeStyles((theme) => ({
     border: "2px solid rgba(244, 67, 54, 0.85)",
     backgroundColor: "rgba(244, 67, 54, 0.35)",
   },
+  forgottenWaiting: {
+    border: "2px solid rgba(255, 193, 7, 0.9)",
+  },
   urgentBadge: {
     marginLeft: "6px",
     fontSize: "0.65rem",
@@ -742,6 +745,7 @@ const TicketListItemCustom = ({ ticket }) => {
           [classes.pendingTicket]: ticket.status === "pending",
           [classes.selectedTicket]: ticketId && +ticketId === ticket.id,
           [classes.urgentWaiting]: isUrgentWaiting,
+          [classes.forgottenWaiting]: isForgotten,
         })}
       >
         <span
