@@ -74,6 +74,16 @@ const useStyles = makeStyles((theme) => ({
     padding: "2px 6px",
     letterSpacing: "0.03em",
   },
+  forgottenBadge: {
+    marginLeft: "6px",
+    fontSize: "0.65rem",
+    fontWeight: 700,
+    color: "#4a2f00",
+    backgroundColor: "#ffca28",
+    borderRadius: "8px",
+    padding: "2px 6px",
+    letterSpacing: "0.03em",
+  },
   selectedTicket: {
     backgroundColor: "rgba(33, 150, 243, 0.1)",
     border: "1px solid rgba(33, 150, 243, 0.3)",
@@ -427,10 +437,17 @@ const TicketListItemCustom = ({ ticket }) => {
     return () => clearInterval(interval);
   }, []);
 
+  const waitingMs =
+    ticket.status === "pending" && ticket.updatedAt
+      ? now - parseISO(ticket.updatedAt).getTime()
+      : 0;
+
+  const isForgotten = ticket.status === "pending" && waitingMs >= 8 * 60 * 60 * 1000;
+
   const isUrgentWaiting =
     ticket.status === "pending" &&
-    !!ticket.updatedAt &&
-    now - parseISO(ticket.updatedAt).getTime() >= 30 * 60 * 1000;
+    waitingMs >= 30 * 60 * 1000 &&
+    !isForgotten;
 
   const truncateText = (text, maxLength) => {
     if (!text) return "";
@@ -785,6 +802,11 @@ const TicketListItemCustom = ({ ticket }) => {
                   {isUrgentWaiting && (
                     <Tooltip title="Aguardando há mais de 30 minutos">
                       <span className={classes.urgentBadge}>URGENTE</span>
+                    </Tooltip>
+                  )}
+                  {isForgotten && (
+                    <Tooltip title="Aguardando há mais de 8 horas... alguém esqueceu desse aqui?">
+                      <span className={classes.forgottenBadge}>🥲 ESQUECIDO</span>
                     </Tooltip>
                   )}
                 </Typography>

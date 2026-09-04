@@ -319,6 +319,7 @@ const TicketsListCustom = (props) => {
   }, []);
 
   const WAITING_THRESHOLD_MS = 30 * 60 * 1000;
+  const FORGOTTEN_THRESHOLD_MS = 8 * 60 * 60 * 1000;
 
   const sortedTicketsList = useMemo(() => {
     if (status !== "pending") return ticketsList;
@@ -330,7 +331,9 @@ const TicketsListCustom = (props) => {
       const waitingMs = ticket.updatedAt
         ? now - new Date(ticket.updatedAt).getTime()
         : 0;
-      if (waitingMs >= WAITING_THRESHOLD_MS) {
+      // Depois de 8h, volta pro fluxo normal da fila (com a tag "esquecido")
+      // em vez de ficar preso no topo pra sempre.
+      if (waitingMs >= WAITING_THRESHOLD_MS && waitingMs < FORGOTTEN_THRESHOLD_MS) {
         urgent.push(ticket);
       } else {
         normal.push(ticket);
